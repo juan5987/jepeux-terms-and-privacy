@@ -7,18 +7,24 @@
 <title>Back to the app - Je peux ?</title>
 <style>
 body{font-family:system-ui,sans-serif;max-width:28rem;margin:3rem auto;padding:0 1rem;line-height:1.6;text-align:center}
-a.button{display:inline-block;margin-top:1rem;padding:.9rem 1.6rem;border-radius:999px;background:#5b3df5;color:#fff;text-decoration:none;font-weight:600}
+a.button{display:block;margin:2rem auto 1rem;padding:1.1rem 1.6rem;border-radius:999px;background:#5b3df5;color:#fff;text-decoration:none;font-weight:700;font-size:1.2rem}
+small{color:#666}
 </style>
 </head>
 <body>
 <h1>Bank authorisation done</h1>
-<p>Returning to the app&hellip; If nothing happens, tap the button below.</p>
+<p>Tap the button to go back to the app.</p>
 <a id="open" class="button" href="jepeux://bank-callback">Open the app</a>
+<p><small>Do not close this page before tapping the button.</small></p>
 <script>
-  // Forwards only the query string (code, state, error) to the app's own scheme.
-  var target = "jepeux://bank-callback" + window.location.search;
-  document.getElementById("open").setAttribute("href", target);
-  window.location.replace(target);
+  // Forwards only the query string (code, state, error) to the app (package app.jepeux, scheme jepeux).
+  var query = window.location.search;
+  var isAndroid = /android/i.test(navigator.userAgent);
+  var appLink = isAndroid
+    ? "intent://bank-callback" + query + "#Intent;scheme=jepeux;package=app.jepeux;end"
+    : "jepeux://bank-callback" + query;
+  // No automatic redirect: Chrome blocks it without a tap and leaves a blank tab. Only the button opens the app.
+  document.getElementById("open").setAttribute("href", appLink);
 </script>
 </body>
 </html>
